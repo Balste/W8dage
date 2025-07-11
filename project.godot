@@ -1,0 +1,22 @@
+[gd_resource type="Project" load_steps=1 format=3]
+
+[resource]
+config_version=5
+
+[application]
+config/name="W8dage"
+run/main_scene="res://Main.tscn"
+config/features=PackedStringArray("4.2")
+config/icon="res://icon.png"
+
+[display]
+window/size/viewport_width=720
+window/size/viewport_height=1280
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[input]
+ui_touch={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"pressed":true,"double_click":false,"script":null)]
+}
