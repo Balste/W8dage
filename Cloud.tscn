@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://cloud.png" id="1"]
+
+[node name="Cloud" type="Node2D"]
+script = SubResource("Script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1") # Placeholder cloud sprite
+scale = Vector2(0.5, 0.5)
+
+[resource]
+Script = """
+extends Node2D
+
+func _process(delta):
+	position.x += 100 * delta # Move right at 100 pixels/sec
+	if position.x > 820: # Off-screen (720 + 100)
+		queue_free()
+"""
