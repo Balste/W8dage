@@ -1,0 +1,97 @@
+[gd_scene load_steps=1 format=3]
+
+[node name="UI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ResourceLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+text = "Wood: 0\nStone: 0\nFood: 0\nMetal: 0\nWater: 0"
+
+[node name="PopulationLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 600.0
+offset_top = 10.0
+text = "Population: 0"
+
+[node name="BuildMenu" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 600.0
+offset_top = 1100.0
+offset_right = 700.0
+offset_bottom = 1200.0
+script = SubResource("Script")
+
+[node name="LumberCampButton" type="Button" parent="BuildMenu"]
+layout_mode = 0
+offset_top = 0.0
+offset_right = 100.0
+offset_bottom = 20.0
+text = "Lumber Camp"
+action_mode = 0
+
+[node name="QuarryButton" type="Button" parent="BuildMenu"]
+layout_mode = 0
+offset_top = 20.0
+offset_right = 100.0
+offset_bottom = 40.0
+text = "Quarry"
+action_mode = 0
+
+[node name="FarmButton" type="Button" parent="BuildMenu"]
+layout_mode = 0
+offset_top = 40.0
+offset_right = 100.0
+offset_bottom = 60.0
+text = "Farm"
+action_mode = 0
+
+[node name="HouseButton" type="Button" parent="BuildMenu"]
+layout_mode = 0
+offset_top = 60.0
+offset_right = 100.0
+offset_bottom = 80.0
+text = "House"
+action_mode = 0
+
+[node name="WellButton" type="Button" parent="BuildMenu"]
+layout_mode = 0
+offset_top = 80.0
+offset_right = 100.0
+offset_bottom = 100.0
+text = "Well"
+action_mode = 0
+
+[node name="MineButton" type="Button" parent="BuildMenu"]
+layout_mode = 0
+offset_top = 100.0
+offset_right = 100.0
+offset_bottom = 120.0
+text = "Mine"
+action_mode = 0
+
+[node name="PauseMenu" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 10.0
+offset_top = 1100.0
+offset_right = 110.0
+offset_bottom = 1200.0
+
+[node name="PauseButton" type="Button" parent="PauseMenu"]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+text = "Pause"
+
+[resource]
+Script = """
+extends Panel
+var selected_type = ""
+"""
