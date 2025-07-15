@@ -1,14 +1,15 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scripts/ui/hud.gd" type="Script" id=1]
 [ext_resource path="res://Assets/ui/construction_button.png" type="Texture" id=2]
 [ext_resource path="res://Assets/ui/pause_button.png" type="Texture" id=3]
+[ext_resource path="res://UI/build_menu.tscn" type="PackedScene" id=4]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource(1)
 layer = 1
 
-[node name="TopLeft" type="MarginContainer" parent="."]
+[node name="TopLeft" type="MarginContainer" parent="HUD"]
 anchor_right = 0.4
 anchor_bottom = 0.1
 margin_left = 10
@@ -28,7 +29,7 @@ text = "Metal: 0"
 [node name="WaterLabel" type="Label" parent="Resources"]
 text = "Water: 0"
 
-[node name="TopRight" type="MarginContainer" parent="."]
+[node name="TopRight" type="MarginContainer" parent="HUD"]
 anchor_left = 0.6
 anchor_right = 1.0
 anchor_bottom = 0.1
@@ -41,7 +42,7 @@ horizontal_alignment = 2
 [node name="PopulationLabel" type="Label" parent="TopRight"]
 text = "Population: 0"
 
-[node name="BottomRight" type="TextureButton" parent="."]
+[node name="BottomRight" type="TextureButton" parent="HUD"]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -53,7 +54,7 @@ margin_bottom = -20
 texture_normal = ExtResource(2)
 tooltip_text = "Build"
 
-[node name="BottomLeft" type="TextureButton" parent="."]
+[node name="BottomLeft" type="TextureButton" parent="HUD"]
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_left = 20
@@ -62,3 +63,5 @@ margin_right = 80
 margin_bottom = -20
 texture_normal = ExtResource(3)
 tooltip_text = "Pause"
+
+[node name="BuildMenu" parent="HUD" instance=ExtResource(4)]
