@@ -11,12 +11,17 @@ extends CanvasLayer
 @onready var build_button = $BottomRight
 @onready var pause_button = $BottomLeft
 
+@onready var build_menu = $BuildMenu
+
 signal build_button_pressed
 signal pause_button_pressed
 
 func _ready():
 	build_button.pressed.connect(_on_build_pressed)
 	pause_button.pressed.connect(_on_pause_pressed)
+	
+	# Au lancement, on cache le menu de construction
+	build_menu.visible = false
 
 func update_resources(resources: Dictionary):
 	wood_label.text = "Wood: %d" % resources.get("wood", 0)
@@ -29,6 +34,8 @@ func update_population(current: int, max: int):
 	population_label.text = "Population: %d / %d" % [current, max]
 
 func _on_build_pressed():
+	# On toggle la visibilité du menu construction
+	build_menu.visible = !build_menu.visible
 	emit_signal("build_button_pressed")
 
 func _on_pause_pressed():
