@@ -1,15 +1,18 @@
 [gd_scene load_steps=4 format=2]
 
+; Références externes (scripts, scènes, textures)
 [ext_resource path="res://Scripts/ui/hud.gd" type="Script" id=1]
 [ext_resource path="res://Assets/ui/construction_button.png" type="Texture" id=2]
 [ext_resource path="res://Assets/ui/pause_button.png" type="Texture" id=3]
 [ext_resource path="res://UI/build_menu.tscn" type="PackedScene" id=4]
 
+; Noeud racine HUD (CanvasLayer)
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource(1)
 layer = 1
 
-[node name="TopLeft" type="MarginContainer" parent="HUD"]
+; TopLeft container ressources
+[node name="TopLeft" type="MarginContainer" parent="."]
 anchor_right = 0.4
 anchor_bottom = 0.1
 margin_left = 10
@@ -18,18 +21,24 @@ margin_right = 400
 margin_bottom = 60
 
 [node name="Resources" type="VBoxContainer" parent="TopLeft"]
+
 [node name="WoodLabel" type="Label" parent="Resources"]
 text = "Wood: 0"
+
 [node name="FoodLabel" type="Label" parent="Resources"]
 text = "Food: 0"
+
 [node name="StoneLabel" type="Label" parent="Resources"]
 text = "Stone: 0"
+
 [node name="MetalLabel" type="Label" parent="Resources"]
 text = "Metal: 0"
+
 [node name="WaterLabel" type="Label" parent="Resources"]
 text = "Water: 0"
 
-[node name="TopRight" type="MarginContainer" parent="HUD"]
+; TopRight population
+[node name="TopRight" type="MarginContainer" parent="."]
 anchor_left = 0.6
 anchor_right = 1.0
 anchor_bottom = 0.1
@@ -42,7 +51,8 @@ horizontal_alignment = 2
 [node name="PopulationLabel" type="Label" parent="TopRight"]
 text = "Population: 0"
 
-[node name="BottomRight" type="TextureButton" parent="HUD"]
+; BottomRight construction button
+[node name="BottomRight" type="TextureButton" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -54,7 +64,8 @@ margin_bottom = -20
 texture_normal = ExtResource(2)
 tooltip_text = "Build"
 
-[node name="BottomLeft" type="TextureButton" parent="HUD"]
+; BottomLeft pause button
+[node name="BottomLeft" type="TextureButton" parent="."]
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_left = 20
@@ -64,4 +75,5 @@ margin_bottom = -20
 texture_normal = ExtResource(3)
 tooltip_text = "Pause"
 
-[node name="BuildMenu" parent="HUD" instance=ExtResource(4)]
+; BuildMenu instance ajoutée comme enfant direct de HUD
+[node name="BuildMenu" parent="." instance=ExtResource(4)]
