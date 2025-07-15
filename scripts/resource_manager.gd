@@ -9,6 +9,9 @@ var resources := {
     "water": 0
 }
 
+var population := 0
+var max_population := 10
+
 # Liste des bâtiments de production actifs (ajoutés dynamiquement)
 var production_buildings := []
 
