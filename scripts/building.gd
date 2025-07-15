@@ -1,44 +1,45 @@
 extends Node2D
-
 class_name Building
 
-# Propriétés de base communes à tous les bâtiments
-var resource_type := ""         # Exemple : "wood", "food"
-var worker_count := 0          # De 0 à 4
+var resource_type := ""       # Exemple : "wood", "stone"
+var worker_count := 0
 var max_workers := 4
-var resource_range := 1        # Distance optimale à la ressource (en cases)
-var bonus_radius := 5          # Distance au-delà de laquelle il n’y a plus de bonus
+var bonus_radius := 5         # Rayon de recherche autour du bâtiment (en cases)
 
-# Pour que chaque bâtiment puisse s’inscrire à la production
+var source_tile_ids := []     # À définir dans les classes enfants
+
 func _ready():
     get_node("/root/Main").resource_manager.register_building(self)
 
 func _exit_tree():
     get_node("/root/Main").resource_manager.unregister_building(self)
 
-# Cette méthode calcule un bonus de production selon la proximité de la ressource
 func get_resource_bonus() -> float:
-    var tilemap = get_node("/root/Main").get_node("WorldTileMap")
-    var position = global_position
+    var tilemap = get_node("/root/Main/WorldTileMap")
+    var center = tilemap.local_to_map(global_position)
+    var closest_distance = INF
 
-    var nearby_bonus := 0.0
-    var in_range := 0
-
-    for x in range(-bonus_radius, bonus_radius + 1):
-        for y in range(-bonus_radius, bonus_radius + 1):
-            var check_pos = position + Vector2(x * 64, y * 32) # en pixels
-            var cell = tilemap.world_to_map(check_pos)
-            var tile_id = tilemap.get_cell_source_id(0, cell)
+    for dx in range(-bonus_radius, bonus_radius + 1):
+        for dy in range(-bonus_radius, bonus_radius + 1):
+            var pos = center + Vector2i(dx, dy)
+            var tile_id = tilemap.get_cell_source_id(0, pos)
 
             if is_matching_resource(tile_id):
-                var dist = position.distance_to(check_pos)
-                if dist <= resource_range * 64:
-                    nearby_bonus += 1.0
-                    in_range += 1
+                var dist = center.distance_to(pos)
+                if dist < closest_distance:
+                    closest_distance = dist
 
-    # Plus il y a de tuiles proches, plus le bonus est haut (max : 1.0)
-    return clamp(nearby_bonus / 5.0, 0.0, 1.0)
+    if closest_distance == INF:
+        return 0.1  # Pas de ressource détectée
 
-# Cette méthode devra être redéfinie par chaque bâtiment enfant
+    if closest_distance <= 1:
+        return 1.0
+    if closest_distance >= 5:
+        return 0.1
+
+    # Interpolation linéaire entre 1 (bonus 1.0) et 5 (bonus 0.1)
+    var t = (closest_distance - 1.0) / 4.0
+    return lerp(1.0, 0.1, t)
+
 func is_matching_resource(tile_id: int) -> bool:
-    return false
+    return source_tile_ids.has(tile_id)
