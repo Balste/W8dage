@@ -1,10 +1,11 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://TileMap/terrain_tileset.tres" type="TileSet" id=1]
+[ext_resource path="res://Assets/tiles/terrain_tileset.tres" type="TileSet" id=1]
 
 [node name="WorldTileMap" type="TileMap"]
 tile_set = ExtResource(1)
 cell_size = Vector2(64, 32)
-cell_tile_origin = 1
-cell_quadrant_size = 16
+cell_tile_origin = 2
+cell_half_offset = 2
 cell_y_sort = true
+use_parent_material = true
