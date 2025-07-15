@@ -14,7 +14,7 @@ var save_system
 # Construction
 var selected_building_scene: PackedScene = null
 
-# Mapping des noms → scènes
+# Nom → scène de construction
 var building_scenes := {
 	"house": preload("res://Scenes/Building/house.tscn"),
 	"wood_camp": preload("res://Scenes/Building/wood_camp.tscn"),
@@ -24,8 +24,11 @@ var building_scenes := {
 	"well": preload("res://Scenes/Building/well.tscn")
 }
 
+# Liste des IDs de tuiles interdites à la construction (à adapter à ton TileSet)
+var forbidden_tiles := [1, 2] # Exemple : 1 = eau, 2 = montagne
+
 func _ready():
-	# Chargement des systèmes
+	# Chargement et ajout des systèmes
 	resource_manager = preload("res://Scripts/resource_manager.gd").new()
 	time_manager = preload("res://Scripts/time_manager.gd").new()
 	save_system = preload("res://Scripts/save_system.gd").new()
@@ -34,7 +37,7 @@ func _ready():
 	add_child(time_manager)
 	add_child(save_system)
 
-	# Connexions
+	# Connexions du HUD
 	hud.build_button_pressed.connect(_on_build_button_pressed)
 	hud.pause_button_pressed.connect(_on_pause_button_pressed)
 
@@ -46,6 +49,7 @@ func _ready():
 	build_menu.build_farm.connect(() => select_building("farm"))
 	build_menu.build_well.connect(() => select_building("well"))
 
+	# Chargement de sauvegarde (optionnel en v0.1)
 	save_system.load_game()
 
 func _process(delta):
@@ -69,12 +73,12 @@ func _on_build_button_pressed():
 	hud.get_node("BuildMenu").visible = not hud.get_node("BuildMenu").visible
 
 func _on_pause_button_pressed():
-	print("Pause — À implémenter")
+	print("Pause — à implémenter")
 
 func select_building(building_name: String):
 	if building_scenes.has(building_name):
 		selected_building_scene = building_scenes[building_name]
-		print("Selected building:", building_name)
+		print("Sélection du bâtiment :", building_name)
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -82,14 +86,18 @@ func _unhandled_input(event):
 			var mouse_pos = get_viewport().get_mouse_position()
 			var world_pos = tilemap.to_local(get_viewport().get_camera_2d().get_screen_to_world(mouse_pos))
 			var tile_pos = tilemap.local_to_map(world_pos)
+
+			# Vérifie la tuile à cet endroit
+			var tile_id = tilemap.get_cell_source_id(0, tile_pos)
+			if tile_id in forbidden_tiles:
+				print("Impossible de construire ici : terrain bloqué.")
+				return
+
 			var cell_pos = tilemap.map_to_local(tile_pos)
-
-			# TODO: Vérifier qu’on peut construire ici (non bloqué, etc.)
-
 			var building = selected_building_scene.instantiate()
 			building.position = cell_pos
 			tilemap.add_child(building)
 
 			resource_manager.register_building(building)
 			selected_building_scene = null
-			print("Bâtiment posé :", building.name)
+			print("Bâtiment placé :", building.name)
