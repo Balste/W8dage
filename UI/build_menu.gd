@@ -1,5 +1,6 @@
 extends Panel
 
+# Signaux émis quand un bouton construction est pressé
 signal build_house
 signal build_wood_camp
 signal build_quarry
