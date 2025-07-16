@@ -2,27 +2,15 @@ extends Node
 
 # Ressources disponibles
 var resources := {
-    "wood": 1000,   # départ
+    "wood": 1000,    # départ
     "food": 0,
-    "stone": 100,   # départ (rock)
-    "metal": 100,   # départ
+    "stone": 100,    # départ (rock)
+    "metal": 100,    # départ
     "water": 0
 }
 
 var population := 0
 var max_population := 10
-
-# Liste des bâtiments de production actifs (ajoutés dynamiquement)
-var production_buildings := []
-
-# Production brute par ressource et par bâtiment (valeurs de base, ajustables)
-var base_production := {
-    "wood": 5,
-    "food": 5,
-    "stone": 4,
-    "metal": 3,
-    "water": 6
-}
 
 # Dictionnaire des coûts de construction
 var build_costs := {
@@ -34,8 +22,20 @@ var build_costs := {
     "well": {"stone": 50, "metal": 50}
 }
 
+# Production brute par ressource et par bâtiment (valeurs de base, ajustables)
+var base_production := {
+    "wood": 5,
+    "food": 5,
+    "stone": 4,
+    "metal": 3,
+    "water": 6
+}
+
+# Liste des bâtiments de production actifs (ajoutés dynamiquement)
+var production_buildings := []
+
 func _ready():
-    pass # Pour extension future (ex: chargement de paramètres)
+    pass
 
 func register_building(building):
     if not production_buildings.has(building):
@@ -51,12 +51,29 @@ func process_production():
         var worker_count = building.worker_count
         var efficiency = get_efficiency(worker_count)
         var base = base_production.get(res_type, 0)
-
         var produced = int(base * efficiency * building.get_resource_bonus())
         add_resource(res_type, produced)
 
+func get_building_count_for_resource(res_type: String) -> int:
+    var count = 0
+    for building in production_buildings:
+        if building.resource_type == res_type:
+            count += 1
+    return count
+
+func get_storage_max(res_type: String) -> int:
+    # 200 de stockage par bâtiment de production de cette ressource
+    var n = get_building_count_for_resource(res_type)
+    return n * 200
+
 func add_resource(type: String, amount: int):
-    if resources.has(type):
+    if not resources.has(type):
+        return
+    var max_stock = get_storage_max(type)
+    # Si stockage max = 0, on autorise quand même l'augmentation (cas départ sans bâtiment)
+    if max_stock > 0:
+        resources[type] = min(resources[type] + amount, max_stock)
+    else:
         resources[type] += amount
 
 func get_resource_amount(type: String) -> int:
