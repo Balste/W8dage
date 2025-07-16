@@ -1,5 +1,39 @@
 extends CanvasLayer
 
+signal build_house
+signal build_wood_camp
+signal build_quarry
+signal build_mine
+signal build_farm
+signal build_well
+
+# Dans func _ready(), connecte les signaux du build_menu à ton propre HUD :
+func _ready():
+    build_button.pressed.connect(_on_build_pressed)
+    pause_button.pressed.connect(_on_pause_pressed)
+
+    # Centralise ici :
+    build_menu.build_house.connect(emit_build_house)
+    build_menu.build_wood_camp.connect(emit_build_wood_camp)
+    build_menu.build_quarry.connect(emit_build_quarry)
+    build_menu.build_mine.connect(emit_build_mine)
+    build_menu.build_farm.connect(emit_build_farm)
+    build_menu.build_well.connect(emit_build_well)
+
+# Et ajoute ces fonctions :
+func emit_build_house():
+    emit_signal("build_house")
+func emit_build_wood_camp():
+    emit_signal("build_wood_camp")
+func emit_build_quarry():
+    emit_signal("build_quarry")
+func emit_build_mine():
+    emit_signal("build_mine")
+func emit_build_farm():
+    emit_signal("build_farm")
+func emit_build_well():
+    emit_signal("build_well")
+
 @onready var wood_label = $TopLeft/Resources/WoodLabel
 @onready var food_label = $TopLeft/Resources/FoodLabel
 @onready var stone_label = $TopLeft/Resources/StoneLabel
