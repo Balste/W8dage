@@ -1,4 +1,4 @@
-extends "res://Scripts/building.gd"
+extends "res://Scripts/buildings/building.gd"
 
 func _ready():
     resource_type = "metal"
