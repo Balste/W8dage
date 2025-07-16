@@ -2,10 +2,10 @@ extends Node
 
 # Ressources disponibles
 var resources := {
-    "wood": 0,
+    "wood": 1000,   # départ
     "food": 0,
-    "stone": 0,
-    "metal": 0,
+    "stone": 100,   # départ (rock)
+    "metal": 100,   # départ
     "water": 0
 }
 
@@ -22,6 +22,16 @@ var base_production := {
     "stone": 4,
     "metal": 3,
     "water": 6
+}
+
+# Dictionnaire des coûts de construction
+var build_costs := {
+    "farm": {"wood": 10},
+    "wood_camp": {"wood": 100, "stone": 50},
+    "house": {"wood": 100, "stone": 50},
+    "mine": {"wood": 100},
+    "quarry": {"wood": 100, "stone": 100},
+    "well": {"stone": 50, "metal": 50}
 }
 
 func _ready():
@@ -64,3 +74,21 @@ func get_efficiency(workers: int) -> float:
             return 1.0
         _:
             return 0.0
+
+# Vérifie si on a assez de ressources pour construire ce bâtiment
+func can_afford(building_name: String) -> bool:
+    if !build_costs.has(building_name):
+        return false
+    var cost = build_costs[building_name]
+    for k in cost.keys():
+        if resources.get(k, 0) < cost[k]:
+            return false
+    return true
+
+# Déduit les ressources nécessaires à la construction
+func pay_for_building(building_name: String):
+    if !build_costs.has(building_name):
+        return
+    var cost = build_costs[building_name]
+    for k in cost.keys():
+        resources[k] -= cost[k]
