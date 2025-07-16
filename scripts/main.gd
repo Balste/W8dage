@@ -9,7 +9,7 @@ var time_manager
 var save_system
 
 @onready var hud = $HUD
-@onready var tilemap = $World/TileMap
+@onready var tilemap = $WorldTileMap
 
 # Construction
 var selected_building_scene: PackedScene = null
