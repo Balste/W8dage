@@ -37,17 +37,15 @@ func _ready():
 	add_child(time_manager)
 	add_child(save_system)
 
-	# Connexions du HUD
+	# Connexions du HUD (incluant les relai des signaux de construction)
 	hud.build_button_pressed.connect(_on_build_button_pressed)
 	hud.pause_button_pressed.connect(_on_pause_button_pressed)
-
-	var build_menu = hud.get_node("BuildMenu")
-	build_menu.build_house.connect(() => select_building("house"))
-	build_menu.build_wood_camp.connect(() => select_building("wood_camp"))
-	build_menu.build_quarry.connect(() => select_building("quarry"))
-	build_menu.build_mine.connect(() => select_building("mine"))
-	build_menu.build_farm.connect(() => select_building("farm"))
-	build_menu.build_well.connect(() => select_building("well"))
+	hud.build_house.connect(_on_build_house)
+	hud.build_wood_camp.connect(_on_build_wood_camp)
+	hud.build_quarry.connect(_on_build_quarry)
+	hud.build_mine.connect(_on_build_mine)
+	hud.build_farm.connect(_on_build_farm)
+	hud.build_well.connect(_on_build_well)
 
 	# Chargement de sauvegarde (optionnel en v0.1)
 	save_system.load_game()
@@ -75,6 +73,20 @@ func _on_build_button_pressed():
 func _on_pause_button_pressed():
 	print("Pause — à implémenter")
 
+# Fonctions pour sélectionner le bâtiment à construire
+func _on_build_house():
+	select_building("house")
+func _on_build_wood_camp():
+	select_building("wood_camp")
+func _on_build_quarry():
+	select_building("quarry")
+func _on_build_mine():
+	select_building("mine")
+func _on_build_farm():
+	select_building("farm")
+func _on_build_well():
+	select_building("well")
+
 func select_building(building_name: String):
 	if building_scenes.has(building_name):
 		selected_building_scene = building_scenes[building_name]
@@ -84,20 +96,19 @@ func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if selected_building_scene != null:
 			var mouse_pos = get_viewport().get_mouse_position()
+			# Adapter selon ta caméra et ton tilemap !
 			var world_pos = tilemap.to_local(get_viewport().get_camera_2d().get_screen_to_world(mouse_pos))
 			var tile_pos = tilemap.local_to_map(world_pos)
-
-			# Vérifie la tuile à cet endroit
-			var tile_id = tilemap.get_cell_source_id(0, tile_pos)
-			if tile_id in forbidden_tiles:
-				print("Impossible de construire ici : terrain bloqué.")
+			
+			# Vérifie la tuile à cet endroit (exemple à adapter)
+			var cell_id = tilemap.get_cell_source_id(0, tile_pos)
+			if forbidden_tiles.has(cell_id):
+				print("Impossible de construire ici (case interdite)")
 				return
 
-			var cell_pos = tilemap.map_to_local(tile_pos)
+			# Instancie le bâtiment
 			var building = selected_building_scene.instantiate()
-			building.position = cell_pos
+			building.position = tilemap.map_to_local(tile_pos)
 			tilemap.add_child(building)
-
-			resource_manager.register_building(building)
+			print("Bâtiment construit à :", tile_pos)
 			selected_building_scene = null
-			print("Bâtiment placé :", building.name)
